@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="360" viewBox="0 0 360 360">
+  <g fill="none" fill-rule="evenodd">
+    <rect width="360" height="360" fill="#777"/>
+    <g stroke="#FFF" opacity=".65" transform="translate(99 70)">
+      <polygon stroke-width="1.76" points="0 0 134.711 0 162.8 29.413 162.8 220 0 220"/>
+      <line x1="35.2" x2="127.6" y1="84.15" y2="84.15" stroke-width="1.6"/>
+      <line x1="35.2" x2="127.6" y1="111.65" y2="111.65" stroke-width="1.6"/>
+      <line x1="35.2" x2="127.6" y1="139.15" y2="139.15" stroke-width="1.6"/>
+      <line x1="35.2" x2="127.6" y1="166.65" y2="166.65" stroke-width="1.6"/>
+      <path stroke-width="1.6" d="M134.353071,1.20792265e-13 L134.353071,23.1 C134.353071,26.7450793 137.307992,29.7 140.953071,29.7 L162.8,29.7 L162.8,29.7"/>
+    </g>
+  </g>
+</svg>
