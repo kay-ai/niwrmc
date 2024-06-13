@@ -104,7 +104,7 @@ Route::controller(InvoiceController::class)->group(function () {
 Route::controller(PaymentController::class)->group(function () {
     Route::post('/payments/upload/{id}', 'uploadReceipt')->name('upload.receipt');
     Route::post('/payments/verify/{id}', 'verify')->name('payments.verify');
-    Route::post('/view-receipt', 'viewReceipt')->name('view.receipt');
+    Route::get('/view-receipt', 'viewReceipt')->name('view.receipt');
 });
 
 Route::controller(PagesController::class)->group(function () {

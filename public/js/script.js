@@ -66,7 +66,7 @@ function viewReceipt(id){
 
     $.ajax({
         url: "/view-receipt/",
-        type: "POST",
+        type: "GET",
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
