@@ -39,7 +39,7 @@
 <script src="/vendors/apex_chart/bar_active_1.js"></script>
 <script src="/vendors/chartjs/chartjs_active.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
-<script src="/js/script.js"></script>
+<script src="/js/script.js?v=1.0"></script>
 {{-- Select 2 --}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <script>
