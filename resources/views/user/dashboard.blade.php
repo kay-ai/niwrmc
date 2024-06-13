@@ -100,7 +100,7 @@
                                         <td>{{($application->created_at)->format('D, d M Y')}}</td>
                                         <td>
                                             <div class="btn-group btn-group-sm" role="group" aria-label="">
-                                                <button type="button" title="View Documents" class="btn btn-secondary" onclick="viewDocuments({{$application->id}}, '{{$application->application_slug}}')"><i class="ti-file"></i></button>
+                                                <button type="button" title="View Documents" class="btn btn-secondary" onclick="viewDocuments({{$application->id}})"><i class="ti-file"></i></button>
                                             </div>
                                             @if ($application->stage == 'step5')
                                                 <div class="btn-group btn-group-sm" role="group" aria-label="">

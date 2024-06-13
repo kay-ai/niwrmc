@@ -52,9 +52,8 @@ class PagesController extends Controller
     public function viewDocument(Request $request)
     {
         $id = $request->id;
-        $slug = $request->slug;
 
-        $document = ApplicationDocument::where(['application_id' => $id, 'application_name'=> $slug])->get();
+        $document = ApplicationDocument::where(['application_id' => $id])->get();
 
         if(!$document){
             return response()->json(['status'=>'error', 'msg' => 'There is no Document Uploaded for this Application']);
