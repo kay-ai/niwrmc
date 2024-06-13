@@ -117,7 +117,7 @@ function deleteLicense(id){
     $('#license_delete_form').attr('action', "/license/"+id+"/delete");
 }
 
-function viewDocuments(id, slug){
+function viewDocuments(id){
     $('#view-document').modal('show');
 
     $.ajax({
@@ -126,7 +126,7 @@ function viewDocuments(id, slug){
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        data: {id: id, slug: slug},
+        data: {id: id},
         beforeSend: function(){
             $('#view_document_body').html('');
             $('#view-document .loading').html('Loading...');
