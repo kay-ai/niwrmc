@@ -122,7 +122,7 @@ function viewDocuments(id){
 
     $.ajax({
         url: "/view-document/",
-        type: "POST",
+        type: "GET",
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },

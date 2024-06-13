@@ -108,7 +108,7 @@ Route::controller(PaymentController::class)->group(function () {
 });
 
 Route::controller(PagesController::class)->group(function () {
-    Route::post('/view-document', 'viewDocument')->name('view.document');
+    Route::get('/view-document', 'viewDocument')->name('view.document');
 });
 
 Route::controller(ApplicationFormController::class)->group(function () {
