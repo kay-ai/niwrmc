@@ -22,7 +22,7 @@ class SuperAdminSeeder extends Seeder
             $role = Role::where('name', 'Super Admin')->first();
         }
 
-        $user = User::where('email','admin@wmc.com')->first();
+        $user = User::where('email','admin@niwrmc.com')->first();
 
         if($user && !$user->hasRole('Super Admin')){
             $user->syncRoles([$role->name]);
