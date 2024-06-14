@@ -247,8 +247,10 @@ class ApplicationFormController extends Controller
         return redirect()->back()->with('success', 'Application documents saved successfully');
     }
 
-    public function getFormStep3($application_id){
+    public function getFormStep3(Request $request){
         $customer_id = session('wmc-customer')['id'];
+        $application_id = $request->application_id;
+
         if(!$application_id){
             $application_id = session('wmc-application')['id'];
         }
