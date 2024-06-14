@@ -36,9 +36,11 @@
                                 <td>{{($invoice->created_at)->format('D, d M Y')}}</td>
                                 <td>
                                     <div class="btn-group btn-group-sm" role="group" aria-label="">
-                                        <button type="button" title="View Invoice" onclick="viewInvoice({{$invoice->customer_id}}, '{{$invoice->category}}')" class="btn btn-primary">
-                                            <i class="ti-eye"></i>
-                                        </button>
+                                        @can('view invoice')
+                                            <button type="button" title="View Invoice" onclick="viewInvoice({{$invoice->customer_id}}, '{{$invoice->category}}')" class="btn btn-primary">
+                                                <i class="ti-eye"></i>
+                                            </button>
+                                        @endcan
                                     </div>
                                 </td>
                             </tr>
@@ -49,7 +51,10 @@
         </div>
     </div>
 @endsection
-@include('customer.invoice.view')
+
+@can('view invoice')
+    @include('customer.invoice.view')
+@endcan
 
 @push('js')
     <script>

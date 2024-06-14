@@ -42,6 +42,7 @@
 <script src="/js/script.js?v=1.0"></script>
 {{-- Select 2 --}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/masonry/4.2.2/masonry.pkgd.min.js"></script>
 <script>
     $(document).ready(function () {
         $('.select2').select2({
@@ -62,6 +63,24 @@
         });
 
         $('.select2-container--default .select2-search--inline .select2-search__field').css('width', '100%');
+    });
+
+    $(".datatable_niwrmc").DataTable({
+      bLengthChange: false,
+      bDestroy: true,
+      dom: 'Bfrtip',
+      buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+      language: {
+        search: "Search:",
+        searchPlaceholder: "Quick Search",
+        paginate: {
+          next: "<i class='ti-arrow-right'></i>",
+          previous: "<i class='ti-arrow-left'></i>",
+        },
+      },
+      columnDefs: [{ visible: true }],
+      responsive: true,
+      searching: true,
     });
 </script>
 

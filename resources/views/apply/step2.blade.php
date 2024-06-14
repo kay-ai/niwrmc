@@ -103,7 +103,7 @@
                                     <div class="form-group">
                                         <label for="document_name">Document name:</label>
                                         {{-- <input type="text" name="" > --}}
-                                        <select name="document_name[]" id="" class="form-control form-select select2" required>
+                                        <select name="document_name[]" id="" class="form-control form-select" required>
                                             <option value="">- Select an Option -</option>
                                             <option value="Certificate of Incorporation">Certificate of Incorporation</option>
                                             <option value="NSITF/ITF">NSITF/ITF</option>
@@ -188,6 +188,8 @@
             }
         });
     });
-    </script>
+
+
+</script>
 
 @endpush

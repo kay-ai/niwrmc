@@ -227,11 +227,25 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="license_sub_category_id" class="mb-3">3.1. Select Category of License you require</label>
-                                    <select name="license_sub_category_id" value="{{session('wmc-application')['license_sub_category_id'] ?? ''}}" class="form-select" required>
+                                    <select name="license_sub_category_id" value="{{ session('wmc-application')['license_sub_category_id'] ?? '' }}" class="form-select" required>
                                         <option>- Select an Option -</option>
                                         @if($subCat)
-                                            @foreach ($subCat as $cat)
-                                                <option value="{{$cat->id}}">{{$cat->name}}</option>
+                                            @php
+                                                // Group subcategories by their license category
+                                                $groupedSubCategories = [];
+                                                foreach ($subCat as $cat) {
+                                                    $groupedSubCategories[$cat->license_category->name][] = $cat;
+                                                }
+                                            @endphp
+
+                                            @foreach ($groupedSubCategories as $categoryName => $subCategories)
+                                                <optgroup label="{{ $categoryName }}">
+                                                    @foreach ($subCategories as $cat)
+                                                        <option value="{{ $cat->id }}">
+                                                            {{ $cat->name }} | (Processing Fee: {{ number_format($cat->processing_fee) }}) | (Licensing Fee: {{ number_format($cat->licensing_fee) }})
+                                                        </option>
+                                                    @endforeach
+                                                </optgroup>
                                             @endforeach
                                         @endif
                                     </select>

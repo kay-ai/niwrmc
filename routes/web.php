@@ -13,7 +13,12 @@ use App\Http\Controllers\LicenseController;
 use App\Http\Controllers\LicenseSubCategoryController;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\PermissionAssignmentController;
+use App\Http\Controllers\PermissionsController;
 use App\Http\Controllers\PricingController;
+use App\Http\Controllers\RoleAssignmentController;
+use App\Http\Controllers\RolesController;
+use App\Http\Controllers\UsersController;
 use App\Models\LicenseCategory;
 use Illuminate\Support\Facades\Route;
 
@@ -35,6 +40,9 @@ Route::middleware('auth:customer')->group(function () {
     Route::controller(PagesController::class)->group(function () {
         Route::get('/apply-license', 'applyLicense')->name('apply.license');
         Route::get('/customer-dashboard', 'customerDashboard')->name('customer-dashboard');
+        Route::get('/profile', 'profile')->name('profile');
+        Route::post('/profile/update', 'profileUpdate')->name('profile.update');
+        Route::post('/profile/password', 'changePassword')->name('profile.password');
     });
 
     Route::controller(LicenseController::class)->group(function () {
@@ -57,6 +65,9 @@ Route::middleware('auth')->group(function () {
 
     Route::controller(PagesController::class)->group(function () {
         Route::get('/user-dashboard', 'dashboard')->name('user-dashboard');
+        Route::get('/user-profile', 'profile')->name('user.profile');
+        Route::post('/user-profile/update', 'profileUpdate')->name('user.profile.update');
+        Route::post('/user-profile/password', 'changePassword')->name('user.profile.password');
     });
 
     Route::controller(InvoiceController::class)->group(function () {
@@ -69,6 +80,11 @@ Route::middleware('auth')->group(function () {
 
     Route::controller(PaymentController::class)->group(function () {
         Route::get('/payments', 'index')->name('payments');
+    });
+
+    Route::controller(UsersController::class)->group(function () {
+        Route::get('/users', 'index')->name('users');
+        Route::post('/users/create', 'create')->name('users.create');
     });
 
     Route::controller(PricingController::class)->group(function () {
@@ -95,6 +111,15 @@ Route::middleware('auth')->group(function () {
         Route::post('/subcategories/create', 'create')->name('subcategories.create');
         Route::post('/subcategories/{id}/delete', 'destroy')->name('subcategories.delete');
     });
+
+    Route::resources([
+        'roles' => RolesController::class,
+        'permissions' => PermissionsController::class,
+        'role-assignment' => RoleAssignmentController::class,
+        'permission-assignment' => PermissionAssignmentController::class
+    ]);
+
+    Route::post('/role-permissions/{role}', [RolesController::class, 'getPermissions']);
 });
 
 Route::controller(InvoiceController::class)->group(function () {
@@ -120,6 +145,7 @@ Route::controller(ApplicationFormController::class)->group(function () {
     Route::get('/application-form-step2', 'getFormStep2')->name('apply.getFormStep2');
     Route::post('/application-form-step2', 'saveFormStep2')->name('apply.saveFormStep2');
     Route::get('/application-form-step3', 'getFormStep3')->name('apply.getFormStep3');
+    Route::get('/application-form-step3/{application_id}', 'getFormStep3')->name('apply.getFormStep3');
     Route::get('/application-form-step4/{application_id}', 'getFormStep4')->name('apply.getFormStep4');
     Route::get('/application-form-step5', 'getFormStep5')->name('apply.getFormStep5');
 });

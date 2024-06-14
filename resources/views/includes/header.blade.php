@@ -35,8 +35,11 @@
                             <p>Welcome!</p>
                             <h5>{{auth()->user()->first_name . ' '. auth()->user()->last_name}}</h5>
                             <div class="profile_info_details">
-                                <a href="#">My Profile <i class="ti-user"></i></a>
-                                <a href="#">Settings <i class="ti-settings"></i></a>
+                                @if (auth()->guard('customer')->check())
+                                    <a href="/profile">My Profile <i class="ti-user"></i></a>
+                                @else
+                                    <a href="/user-profile">My Profile <i class="ti-user"></i></a>
+                                @endif
                                 <a href="javascript:void(0);"
                                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                     Log Out <i class="ti-shift-left"></i>

@@ -35,6 +35,14 @@
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
     @stack('css')
+    <style>
+        .alert{
+            width: max-content;
+            margin-left: auto;
+            margin-right: 20px;
+            padding-right: 20px;
+        }
+    </style>
 </head>
 
 <body class="crm_body_bg">

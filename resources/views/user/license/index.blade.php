@@ -36,14 +36,18 @@
                                 <td>{{($license->created_at)->format('D, d M Y')}}</td>
                                 <td>
                                     <div class="btn-group btn-group-sm" role="group">
-                                        @if (!$license->generated_at)
-                                            <a class="btn btn-primary" title="Generate License" href="javascript:void(0);" onclick="generateLicense({{$license->id}})" role="button" >
-                                                <i class="ti-zip"></i>
+                                        @can('generate license')
+                                            @if (!$license->generated_at)
+                                                <a class="btn btn-primary" title="Generate License" href="javascript:void(0);" onclick="generateLicense({{$license->id}})" role="button" >
+                                                    <i class="ti-zip"></i>
+                                                </a>
+                                            @endif
+                                        @endcan
+                                        @can('delete license')
+                                            <a class="btn btn-danger" title="Delete License" href="javascript:void(0);" onclick="deleteLicense({{$license->id}})" role="button" >
+                                                <i class="ti-trash"></i>
                                             </a>
-                                        @endif
-                                        <a class="btn btn-danger" title="Delete License" href="javascript:void(0);" onclick="deleteLicense({{$license->id}})" role="button" >
-                                            <i class="ti-trash"></i>
-                                        </a>
+                                        @endcan
                                     </div>
                                 </td>
                             </tr>
@@ -54,8 +58,13 @@
         </div>
     </div>
 @endsection
-@include('user.license.delete-license')
-@include('user.license.generate-license')
+@can('delete license')
+    @include('user.license.delete-license')
+@endcan
+
+@can('generate license')
+    @include('user.license.generate-license')
+@endcan
 
 @push('js')
     <script>

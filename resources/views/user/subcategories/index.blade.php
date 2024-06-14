@@ -5,9 +5,11 @@
         <h4>All License Types</h4>
         <div class="row justify-content-center">
             <div class="col-md-12 d-flex justify-content-end my-3" >
-                <a class="btn btn-success" onclick="$('#create-subcategory').modal('show');" role="button">
-                    <i class="ti-plus"></i> Create License Type
-                </a>
+                @can('create license-type')
+                    <a class="btn btn-success" onclick="$('#create-subcategory').modal('show');" role="button">
+                        <i class="ti-plus"></i> Create License Type
+                    </a>
+                @endcan
             </div>
             <table class="table subcategories_table">
                 <thead>

@@ -12,19 +12,19 @@
                         </a>
                     </div>
                     <div class="text-center">
-                        <a href="/discharge-of-waste-step1">
+                        <a href="/application-form-step1">
                             <div class="number">2</div>
                             <div>Application Details</div>
                         </a>
                     </div>
                     <div class="text-center">
-                        <a href="/discharge-of-waste-step2">
+                        <a href="/application-form-step2">
                             <div class="number">3</div>
                             <div>Documents</div>
                         </a>
                     </div>
                     <div class="text-center">
-                        <a href="/discharge-of-waste-step3">
+                        <a href="/application-form-step3">
                             <div class="number active">4</div>
                             <div>Payment</div>
                         </a>

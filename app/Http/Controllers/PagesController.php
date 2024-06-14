@@ -5,16 +5,84 @@ namespace App\Http\Controllers;
 use App\Models\ApplicationDocument;
 use App\Models\ApplicationForm;
 use App\Models\BoreHoleContractorLicenseForm;
+use App\Models\Customer;
 use App\Models\DischargeWaterWasteForm;
 use App\Models\DrillersLicenseForm;
 use App\Models\License;
 use App\Models\Payment;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class PagesController extends Controller
 {
     public function applyLicense(Request $request){
         return view('customer.apply.index');
+    }
+
+    public function profile(){
+        $user = auth()->user();
+        return view('customer.profile.index', compact('user'));
+    }
+
+    public function profileUpdate(Request $request){
+        $validator = Validator::make($request->all(), [
+            'first_name' => ['required', 'string', 'max:50'],
+            'last_name' => ['required', 'string', 'max:50'],
+            'email' => ['required', 'email', 'max:50'],
+            'phone' => ['string', 'max:50'],
+            // 'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'address' => ['string', 'max:255'],
+        ]);
+
+        if ($validator->fails()) {
+            Log::channel('api')->error('Create User Validation Error: ' . $validator->errors());
+            return redirect()->back()->with('error', $validator->errors());
+        }
+
+        if(auth()->guard('customer')->check()){
+            $user = Customer::where('id', auth()->id())->first();
+        }else{
+            $user = User::where('id', auth()->id())->first();
+        }
+
+        $user->first_name = $request->input('first_name');
+        $user->last_name = $request->input('last_name');
+        $user->email = $request->input('email');
+        $user->phone = $request->input('phone_number');
+        $user->address = $request->input('address');
+        $user->save();
+
+        return redirect()->back()->with('success', 'Profile Update Successfully');
+    }
+
+    public function changePassword(Request $request){
+        $validator = Validator::make($request->all(), [
+            'current_password' => ['required','string'],
+            'password' => ['required','string','min:8', 'confirmed'],
+        ]);
+
+        if ($validator->fails()) {
+            Log::channel('api')->error('Create User Validation Error: '. $validator->errors());
+            return redirect()->back()->with('error', $validator->errors());
+        }
+
+        if(auth()->guard('customer')->check()){
+            $user = Customer::where('id', auth()->id())->first();
+        }else{
+            $user = User::where('id', auth()->id())->first();
+        }
+
+        if (Hash::check($request->input('current_password'), $user->password)) {
+            $user->password = Hash::make($request->input('password'));
+            $user->save();
+
+            return redirect()->back()->with('success', 'Password Changed Successfully');
+        }else{
+            return redirect()->back()->with('error', 'Current Password is Incorrect');
+        }
     }
 
     public function dashboard(){

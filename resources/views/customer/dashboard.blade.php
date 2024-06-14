@@ -41,7 +41,7 @@
                                                 case 'step3':
                                                     $progress = 75;
                                                     $stage = 'Pay Processing Fee';
-                                                    $url = '/application-form-'.$application->stage;
+                                                    $url = '/application-form-'.$application->stage.'/'.$application->id;
                                                     break;
                                                 case 'step4':
                                                     $progress = 80;

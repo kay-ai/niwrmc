@@ -247,9 +247,11 @@ class ApplicationFormController extends Controller
         return redirect()->back()->with('success', 'Application documents saved successfully');
     }
 
-    public function getFormStep3(){
+    public function getFormStep3($application_id){
         $customer_id = session('wmc-customer')['id'];
-        $application_id = session('wmc-application')['id'];
+        if(!$application_id){
+            $application_id = session('wmc-application')['id'];
+        }
 
         $application = ApplicationForm::where('id', $application_id)->first();
 

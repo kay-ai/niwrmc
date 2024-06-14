@@ -42,21 +42,25 @@
                                 </td>
                                 <td>{{($payment->created_at)->format('D, d M Y')}}</td>
                                 <td>
-                                    @if ($payment->status == 'unverified')
-                                        <div class="btn-group btn-group-sm" role="group">
-                                            <a class="btn btn-success" title="Verify Payment" href="javascript:void(0);" onclick="verifyPay({{$payment->id}})" role="button" >
-                                                <i class="ti-check"></i>
-                                            </a>
-                                        </div>
-                                    @endif
-                                    <div class="btn-group btn-group-sm" role="group" aria-label="">
-                                        @if (count($payment->payment_receipts) > 0)
-                                            <a class="btn btn-primary" title="View Payment Receipt" href="javascript:void(0);" onclick="viewReceipt({{$payment->id}})" role="button" >
-                                                <i class="ti-file"></i>
-                                            </a>
-                                        @else
-                                            <p>. . .</p>
+                                    @can('verify payment')
+                                        @if ($payment->status == 'unverified')
+                                            <div class="btn-group btn-group-sm" role="group">
+                                                <a class="btn btn-success" title="Verify Payment" href="javascript:void(0);" onclick="verifyPay({{$payment->id}})" role="button" >
+                                                    <i class="ti-check"></i>
+                                                </a>
+                                            </div>
                                         @endif
+                                    @endcan
+                                    <div class="btn-group btn-group-sm" role="group" aria-label="">
+                                        @can('view payment')
+                                            @if (count($payment->payment_receipts) > 0)
+                                                <a class="btn btn-primary" title="View Payment Receipt" href="javascript:void(0);" onclick="viewReceipt({{$payment->id}})" role="button" >
+                                                    <i class="ti-file"></i>
+                                                </a>
+                                            @else
+                                                <p>. . .</p>
+                                            @endif
+                                        @endcan
                                     </div>
                                 </td>
                             </tr>
@@ -67,8 +71,13 @@
         </div>
     </div>
 @endsection
-@include('customer.payment.view-receipt')
-@include('customer.payment.verify-payment')
+@can('view payment')
+
+    @include('customer.payment.view-receipt')
+@endcan
+@can('verify payment')
+    @include('customer.payment.verify-payment')
+@endcan
 
 @push('js')
     <script>

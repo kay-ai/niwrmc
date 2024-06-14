@@ -5,9 +5,11 @@
         <h4>All Categories</h4>
         <div class="row justify-content-center">
             <div class="col-md-12 d-flex justify-content-end my-3" >
-                <a class="btn btn-success" onclick="$('#create-category').modal('show');" role="button">
-                    <i class="ti-plus"></i> Create Category
-                </a>
+                @can('create-category')
+                    <a class="btn btn-success" onclick="$('#create-category').modal('show');" role="button">
+                        <i class="ti-plus"></i> Create Category
+                    </a>
+                @endcan
             </div>
             <table class="table categories_table">
                 <thead>

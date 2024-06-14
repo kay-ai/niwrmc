@@ -45,84 +45,100 @@
                 </div>
             </div>
         </div>
-        <div class="container-fluid plr_30 body_white_bg pt_30 mt-5 shadow-sm">
-            <div class="row justify-content-center">
-                <div class="col-lg-12 mb-4">
-                    <h4>License Applications</h4>
-                    <table class="table licenses_table">
-                        <thead>
-                            <tr>
-                                <th scope="col">S/N</th>
-                                <th scope="col">Applicant Name</th>
-                                <th scope="col">License Type</th>
-                                <th scope="col">Stage</th>
-                                <th scope="col">Date Applied</th>
-                                <th scope="col">Action</th>
+        @can('view applications')
+            <div class="container-fluid plr_30 body_white_bg pt_30 mt-5 shadow-sm">
+                <div class="row justify-content-center">
+                    <div class="col-lg-12 mb-4">
+                        <h4>License Applications</h4>
+                        <table class="table licenses_table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">S/N</th>
+                                    <th scope="col">Applicant Name</th>
+                                    <th scope="col">License Type</th>
+                                    <th scope="col">Stage</th>
+                                    <th scope="col">Date Applied</th>
+                                    <th scope="col">Action</th>
 
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if (count($applications)>0)
-                                @foreach ($applications as $key => $application)
-                                {{-- {{dd($application->application_slug)}} --}}
-                                    <tr>
-                                        <th scope="row">
-                                            {{$key + 1}}
-                                        </th>
-                                        <td>{{$application->business_name}}</td>
-                                        <td>{{$application->license_sub_category->name}}</td>
-                                        <td>
-                                            @switch($application->stage)
-                                                @case('step1')
-                                                    <a href="#" class="status_btn bg-warning">Created Application</a>
-                                                    @break
-                                                @case('step2')
-                                                    <a href="#" class="status_btn bg-warning">Documents Uploaded</a>
-                                                    @break
-                                                @case('step3')
-                                                    <a href="#" class="status_btn bg-secondary">Generated Invoice</a>
-                                                    @break
-                                                @case('step4')
-                                                    <a href="#" class="status_btn bg-info">Paid Process Fee</a>
-                                                    @break
-                                                @case('step5')
-                                                    <a href="#" class="status_btn bg-default">Paid License Fee</a>
-                                                    @break
-                                                @case('step6')
-                                                    <a href="#" class="status_btn bg-primary">License Approved</a>
-                                                    @break
-                                                @case('step7')
-                                                    <a href="#" class="status_btn bg-success">License Generated</a>
-                                                    @break
-                                                @default
-                                            @endswitch
-                                        </td>
-                                        <td>{{($application->created_at)->format('D, d M Y')}}</td>
-                                        <td>
-                                            <div class="btn-group btn-group-sm" role="group" aria-label="">
-                                                <button type="button" title="View Documents" class="btn btn-secondary" onclick="viewDocuments({{$application->id}})"><i class="ti-file"></i></button>
-                                            </div>
-                                            @if ($application->stage == 'step5')
-                                                <div class="btn-group btn-group-sm" role="group" aria-label="">
-                                                    <button type="button" title="Approve License" class="btn btn-primary" onclick="approveLicense({{$application->id}}, '{{$application->application_slug}}')">
-                                                        <i class="ti-check"></i>
-                                                    </button>
-                                                    <button type="button" title="Decline License" class="btn btn-danger"><i class="ti-close"></i></button>
-                                                </div>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            @endif
-                        </tbody>
-                    </table>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (count($applications)>0)
+                                    @foreach ($applications as $key => $application)
+                                    {{-- {{dd($application->application_slug)}} --}}
+                                        <tr>
+                                            <th scope="row">
+                                                {{$key + 1}}
+                                            </th>
+                                            <td>{{$application->business_name}}</td>
+                                            <td>{{$application->license_sub_category->name}}</td>
+                                            <td>
+                                                @switch($application->stage)
+                                                    @case('step1')
+                                                        <a href="#" class="status_btn bg-warning">Created Application</a>
+                                                        @break
+                                                    @case('step2')
+                                                        <a href="#" class="status_btn bg-warning">Documents Uploaded</a>
+                                                        @break
+                                                    @case('step3')
+                                                        <a href="#" class="status_btn bg-secondary">Generated Invoice</a>
+                                                        @break
+                                                    @case('step4')
+                                                        <a href="#" class="status_btn bg-info">Paid Process Fee</a>
+                                                        @break
+                                                    @case('step5')
+                                                        <a href="#" class="status_btn bg-default">Paid License Fee</a>
+                                                        @break
+                                                    @case('step6')
+                                                        <a href="#" class="status_btn bg-primary">License Approved</a>
+                                                        @break
+                                                    @case('step7')
+                                                        <a href="#" class="status_btn bg-success">License Generated</a>
+                                                        @break
+                                                    @default
+                                                @endswitch
+                                            </td>
+                                            <td>{{($application->created_at)->format('D, d M Y')}}</td>
+                                            <td>
+                                                @can('view application-documents')
+                                                    <div class="btn-group btn-group-sm" role="group" aria-label="">
+                                                        <button type="button" title="View Documents" class="btn btn-secondary" onclick="viewDocuments({{$application->id}})"><i class="ti-file"></i></button>
+                                                    </div>
+                                                @endcan
+                                                @if ($application->stage == 'step5')
+                                                    <div class="btn-group btn-group-sm" role="group" aria-label="">
+                                                        @can('approve license')
+                                                            <button type="button" title="Approve License" class="btn btn-primary" onclick="approveLicense({{$application->id}}, '{{$application->application_slug}}')">
+                                                                <i class="ti-check"></i>
+                                                            </button>
+                                                        @endcan
+                                                        @can('decline license')
+                                                            <button type="button" title="Decline License" class="btn btn-danger">
+                                                                <i class="ti-close"></i>
+                                                            </button>
+                                                        @endcan
+                                                    </div>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @endif
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
+        @endcan
     </div>
 @endsection
-@include('modals.view-document')
-@include('user.license.approve-license')
+
+@can('view application-documents')
+    @include('modals.view-document')
+@endcan
+
+@can('approve license')
+    @include('user.license.approve-license')
+@endcan
 
 @push('js')
     <script>
