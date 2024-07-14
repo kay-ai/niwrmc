@@ -32,9 +32,10 @@ function viewInvoice(id, type){
             $('#in_customer_name').html(data.customer.first_name+' '+data.customer.last_name);
             $('#in_customer_address').html(data.customer.address ?? '...');
             $('#in_reference').html(data.invoice.remita_rrr ?? '...');
+            $('#remita_pay_btn').attr('data-rrr', data.invoice.remita_rrr ?? '');
             $('#in_status').html(data.invoice.status ?? '...');
             $('#in_date').html(moment(data.invoice.created_at).format('Do MMMM YYYY') ?? '...');
-            $('.in_amount').html(data.invoice.amount ?? '...');
+            $('.in_amount').html(Number(data.invoice.amount ?? 0).toLocaleString());
             $('.in_vendor_name').html(formatAndCapitalizeText(data.invoice.application_name) ?? '...');
             $('#in_account_name').html(data.invoice.application_name ?? '...');
             // $('#in_account_number').html(data.vendor.bank_account_number ?? '...');
@@ -43,12 +44,14 @@ function viewInvoice(id, type){
             // $('#in_spn').html(data.meter_request.contract_number ?? '...');
             if(data.invoice.status == 'paid'){
                 $('#in_total_due').html('0');
-                $('#in_status_div').addClass('bg-green');
-                $('#in_status_div').removeClass('bg-pink');
+                $('#in_status_div').addClass('bg-success');
+                $('#remita_pay_btn').addClass('d-none');
+                $('#in_status_div').removeClass('bg-danger');
             }else{
-                $('#in_total_due').html(data.invoice.amount ?? '...');
-                $('#in_status_div').addClass('bg-pink');
-                $('#in_status_div').removeClass('bg-green');
+                $('#in_total_due').html(Number(data.invoice.amount ?? 0).toLocaleString());
+                $('#in_status_div').addClass('bg-danger');
+                $('#remita_pay_btn').removeClass('d-none');
+                $('#in_status_div').removeClass('bg-success');
             }
         },
         complete: function(){

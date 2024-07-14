@@ -51,4 +51,8 @@ class Customer extends Authenticatable
     public function licenses(){
         return $this->hasMany(License::class);
     }
+
+    public function applications(){
+        return $this->hasMany(ApplicationForm::class);
+    }
 }

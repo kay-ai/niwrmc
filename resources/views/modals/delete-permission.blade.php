@@ -5,7 +5,7 @@
             <div class="modal-header" style="display: flex;">
                 <h5 id="modal_title" class="modal-title">Delete Permission</h5>
                 <div class="ml-auto">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -18,7 +18,7 @@
                 @method('DELETE')
                 @csrf
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-default btn-sm" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-info btn-sm">Delete</button>
                 </div>
             </form>

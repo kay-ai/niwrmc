@@ -12,4 +12,12 @@ class ApplicationForm extends Model
     public function license_sub_category(){
         return $this->belongsTo(LicenseSubCategory::class);
     }
+
+    public function customer(){
+        return $this->belongsTo(Customer::class);
+    }
+
+    public function invoices(){
+        return $this->hasMany(Invoice::class);
+    }
 }

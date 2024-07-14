@@ -16,4 +16,8 @@ class Invoice extends Model
     public function payment(){
         return $this->hasOne(Payment::class);
     }
+
+    public function application(){
+        return $this->belongsTo(ApplicationForm::class);
+    }
 }

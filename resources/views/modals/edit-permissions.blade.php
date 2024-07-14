@@ -4,7 +4,7 @@
         <div class="modal-content">
             <div class="modal-header" style="display: flex;">
                 <h5 id="modal_title" class="modal-title">Edit Permission</h5>
-                <button type="button" class="close ml-auto" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close ml-auto" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -27,7 +27,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary">Save</button>
                 </div>
                 <input type="hidden" id="permission_id" name="permission_id" value="" />

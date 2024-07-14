@@ -176,6 +176,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="https://niwrmc.gov.ng/">Home</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/pay-remita">Pay With Remita</a>
+                </li>
                 @if(Auth::guard('customer')->check())
                     <li class="nav-item ml-10">
                         <a class="btn" href="/customer-dashboard" role="button" style="background-color: #55a51c; border:none; color: #fff;">Dashboard</a>

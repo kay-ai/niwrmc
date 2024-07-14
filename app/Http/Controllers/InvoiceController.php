@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\InvoiceGenerated;
 use App\Models\ApplicationForm;
 use App\Models\DischargeWaterWasteForm;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Pricing;
 use App\Models\Invoice;
+use App\Repositories\RemitaRepository;
+use Illuminate\Support\Facades\Mail;
 
 class InvoiceController extends Controller
 {
@@ -28,18 +31,33 @@ class InvoiceController extends Controller
         $category = $request->input('price_category');
         $price = $application->license_sub_category->$category;
 
-        $customer_id = auth()->guard('customer')->user()->id;
+        $customer = auth()->guard('customer')->user();
+
+
+        $rand = rand(1000, 9999);
+        $randomNumber = "OR$rand$customer->id";
+
+        $payload = [
+            "amount" => $price,
+            "orderId" => $randomNumber,
+            "payerName" => $customer->first_name.' '.$customer->last_name,
+            "payerEmail" => $customer->email,
+            "payerPhone" => $customer->phone,
+            "description" => "Payment for ".$request->input('application_name') . "License"
+        ];
 
         if($application){
-            $part1 = rand(1000, 9999);
-            $part2 = rand(1000, 9999);
-            $part3 = rand(1000, 9999);
+            $remitaRepo = new RemitaRepository();
+            $generateRRR = $remitaRepo->generateRRR($payload);
 
-            $randomNumber = "$part1-$part2-$part3-$customer_id";
+            $generateRRR = json_decode($generateRRR->getContent(), true);
+            $RRR = $generateRRR['data']['RRR'];
+            // dd($RRR);
 
             $invoice = new Invoice();
-            $invoice->remita_rrr = $randomNumber;
-            $invoice->customer_id = $customer_id;
+            $invoice->remita_rrr = $RRR;
+            $invoice->order_id = $randomNumber;
+            $invoice->customer_id = $customer->id;
             $invoice->application_id = $request->input('application_id');
             $invoice->application_name = $application->application_slug;
             $invoice->item = $request->input('application_name');
@@ -53,6 +71,9 @@ class InvoiceController extends Controller
                 $application->stage = 'step3';
                 $application->save();
             }
+
+            // Send email to customer
+            Mail::to($customer->email)->send(new InvoiceGenerated($invoice, $customer, $invoice->item, $invoice->category));
 
             return redirect()->back()->with('success', 'Invoice generated Successfully');
         }else{

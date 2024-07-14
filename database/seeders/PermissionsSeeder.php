@@ -49,6 +49,9 @@ class PermissionsSeeder extends Seeder
             'decline license',
             'assign permission',
             'create license-type',
+            'receive application-emails',
+            'receive payment-emails',
+            'receive document-emails',
         ];
 
         foreach ($permissions as $permission) {

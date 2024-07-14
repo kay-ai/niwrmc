@@ -4,7 +4,7 @@
         <div class="modal-content">
             <div class="d-flex p-3 justify-content-between">
                 <h5 id="modal_title" class="modal-title">Add Permission</h5>
-                <div type="button" class="ml-auto" data-dismiss="modal" aria-label="Close">
+                <div type="button" class="ml-auto" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </div>
             </div>
@@ -19,7 +19,7 @@
                             </div>
                         </div>
                         <div class="col-md-12 mt-4 d-flex justify-content-end">
-                            <button type="button" class="btn btn-outline-secondary me-2 px-4" data-dismiss="modal" style="font-size: 12px">Close</button>
+                            <button type="button" class="btn btn-outline-secondary me-2 px-4" data-bs-dismiss="modal" style="font-size: 12px">Close</button>
                             <button type="submit" class="btn btn-success px-4" style="font-size: 12px">Create</button>
                         </div>
                     </div>

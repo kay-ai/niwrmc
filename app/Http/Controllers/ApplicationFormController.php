@@ -2,17 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ApplicationNotification;
+use App\Mail\ApplicationReceived;
+use App\Mail\DocumentReceived;
+use App\Mail\DocumentUploadedNotification;
 use App\Models\ApplicationDocument;
 use App\Models\ApplicationForm;
 use App\Models\Customer;
 use App\Models\EmailToken;
 use App\Models\Invoice;
 use App\Models\LicenseSubCategory;
+use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 
@@ -172,6 +179,26 @@ class ApplicationFormController extends Controller
 
         session(['wmc-application' => $applicationForm]);
 
+        // Generate PDF
+        $pdf = Pdf::loadView('pdf.application', ['applicationForm' => $applicationForm]);
+        $business_name = Str::slug($applicationForm->business_name);
+        $pdfName = "application_$applicationForm->id$business_name";
+        $pdfPath = "app/public/applications/$pdfName.pdf";
+
+        // dd($pdfPath);
+
+        $pdfDirectory = storage_path('app/public/applications/'.$pdfName.'.pdf');
+        $pdf->save($pdfDirectory);
+
+        // Send email to customer
+        Mail::to($applicationForm->customer->email)->send(new ApplicationReceived($applicationForm, $pdfDirectory));
+
+        // Send email to users with "receive application-emails" permission
+        $usersWithPermission = User::permission('receive application-emails')->get();
+        foreach ($usersWithPermission as $user) {
+            Mail::to($user->email)->send(new ApplicationNotification($applicationForm, $pdfDirectory));
+        }
+
         return redirect('/application-form-step2')->with('success', 'Application Progress Saved Successfully');
     }
 
@@ -243,6 +270,15 @@ class ApplicationFormController extends Controller
         $documents = ApplicationDocument::where('application_id', $application->id)->get();
 
         session(['wmc-application-documents' => $documents]);
+
+        // Send email to customer
+        Mail::to($customer->email)->send(new DocumentReceived($application, $documents));
+
+        $usersWithPermission = User::permission('receive document-emails')->get();
+        foreach ($usersWithPermission as $user) {
+            Mail::to($user->email)->send(new DocumentUploadedNotification($application, $documents));
+        }
+
 
         return redirect()->back()->with('success', 'Application documents saved successfully');
     }

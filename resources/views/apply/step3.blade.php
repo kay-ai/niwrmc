@@ -62,10 +62,10 @@
 
                                 <input type="hidden" name="application_name" value="{{$application->license_sub_category->name}}">
                                 <input type="hidden" name="price_category" value="processing_fee">
-                                <input type="hidden" name="application_id" value="{{session('wmc-application')['id'] ?? ''}}">
+                                <input type="hidden" name="application_id" value="{{session('wmc-application')['id'] ?? $application->id}}">
 
                                 @if ($invoice)
-                                    <a href="javascript:void(0);" onclick="viewInvoice({{session('wmc-customer')['id'] ?? ''}}, 'processing_fee')" class="btn_1 my-3">View Invoice</a>
+                                    <a href="javascript:void(0);" onclick="viewInvoice({{session('wmc-customer')['id'] ?? $application->customer_id}}, 'processing_fee')" class="btn_1 my-3">View Invoice</a>
                                     <small>Login to your Dashboard to upload your evidence of payment and view application progress</small>
                                 @else
                                     <button type="submit" class="btn_1">Generate Invoice to continue</button>

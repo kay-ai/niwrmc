@@ -70,7 +70,7 @@
                                     <div class="form-check">
                                         <label class="form-check-label">
                                         <input type="checkbox" class="form-checkbox" name="" id="" value="checkedValue" required>
-                                        I accept the <a href="">terms of reference</a> for this License
+                                        I accept the <a href="{{asset('/tor/new_terms_and_condition.doc')}}">terms of reference</a> for this License
                                         </label>
                                     </div>
                                     <button type="submit" class="btn_1">Generate Invoice to continue</button>

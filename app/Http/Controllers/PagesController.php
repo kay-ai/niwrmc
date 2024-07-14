@@ -22,6 +22,10 @@ class PagesController extends Controller
         return view('customer.apply.index');
     }
 
+    public function payWithRemita(){
+        return view('pay.index');
+    }
+
     public function profile(){
         $user = auth()->user();
         return view('customer.profile.index', compact('user'));

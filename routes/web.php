@@ -36,6 +36,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::controller(PagesController::class)->group(function () {
+    Route::get('/pay-remita', 'payWithRemita')->name('pay.remita');
+});
+
+Route::controller(PaymentController::class)->group(function(){
+    Route::get('/verify-remita-payment/{rrr}/{tx_id}', 'verifyRemitaPayment')->name('verify.payment');
+});
+
 Route::middleware('auth:customer')->group(function () {
     Route::controller(PagesController::class)->group(function () {
         Route::get('/apply-license', 'applyLicense')->name('apply.license');

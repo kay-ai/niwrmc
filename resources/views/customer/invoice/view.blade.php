@@ -8,7 +8,7 @@
                         <div class="loading">Loading...</div>
                     </div>
                     <div class="col-md-6">
-                       <button type="button" class="close ml-auto" data-dismiss="modal" aria-label="Close">
+                       <button type="button" class="close ml-auto" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -49,6 +49,9 @@
                         <div class="vendor-details mt-5">
                             <h6>Remita RRR</h6>
                             <h3 class="text-success text-uppercase" id="in_reference">INM-2898398</h3>
+                        </div>
+                        <div class="mt-5">
+                            <a id="remita_pay_btn" class="btn btn-primary shadow" data-rrr="" onclick="makePayment()" role="button" style="font-size:13px;">Pay Now</a>
                         </div>
                     </div>
                     <div class="col-md-12 mt-5">
@@ -128,3 +131,69 @@
         </div>
     </div>
 </div>
+
+@push('js')
+<script>
+    function makePayment() {
+        $('#view-invoice').modal('hide');
+        var remita_btn = document.querySelector("#remita_pay_btn");
+        var tx_id = "RRR"+Math.floor(Math.random()*1101233);
+        console.log("tx_id: ",tx_id);
+
+        var paymentEngine = RmPaymentEngine.init({
+        key:"QzAwMDAyNzEyNTl8MTEwNjE4NjF8OWZjOWYwNmMyZDk3MDRhYWM3YThiOThlNTNjZTE3ZjYxOTY5NDdmZWE1YzU3NDc0ZjE2ZDZjNTg1YWYxNWY3NWM4ZjMzNzZhNjNhZWZlOWQwNmJhNTFkMjIxYTRiMjYzZDkzNGQ3NTUxNDIxYWNlOGY4ZWEyODY3ZjlhNGUwYTY=",
+        processRrr: true,
+        transactionId: tx_id,
+        extendedData: {
+            customFields: [
+                {
+                    name: "rrr",
+                    value: remita_btn.getAttribute('data-rrr')
+                }
+            ]
+            },
+            onSuccess: function (response) {
+                swal({
+                    title: "Payment is being verified",
+                    text: "Please wait. Don't leave this page.",
+                    icon: "info",
+                    button: false,
+                    closeOnClickOutside: false,
+                    closeOnEsc: false
+                });
+
+                const xhr = new XMLHttpRequest();
+                xhr.open("GET", "/verify-remita-payment/"+response.paymentReference+"/"+tx_id);
+                xhr.onload = function() {
+                    const verifyResponse = JSON.parse(xhr.responseText)
+                    if (xhr.status === 200) {
+                        swal({
+                            title: "Payment Verified Successfully",
+                            icon: "success",
+                            button: "OK"
+                        }).then(() => {
+                            window.location.href = "/customer-invoices";
+                        });
+                    } else {
+                        swal({
+                            title: "Payment Verification Failed",
+                            text: verifyResponse.message,
+                            icon: "error",
+                            button: "Try Again"
+                        });
+                    }
+                };
+            xhr.send();
+            },
+            onError: function (response) {
+                console.log('callback Error Response', response);
+            },
+            onClose: function () {
+                console.log("closed");
+            }
+        });
+        paymentEngine.showPaymentWidget();
+    }
+
+</script>
+@endpush

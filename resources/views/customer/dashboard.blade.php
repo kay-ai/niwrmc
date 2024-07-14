@@ -8,7 +8,7 @@
                     <div class="white_box mb_30 min_400">
                         @if (count(auth()->guard('customer')->user()->invoices->where('status','unpaid'))>0)
                             <div class="alert alert-warning alert-dismissible fade show pe-3" role="alert">
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                                 <a class="btn btn-outline-dark btn-sm float-end me-4" href="/customer-invoices" role="button" style="margin-top: -4px;">View</a>
