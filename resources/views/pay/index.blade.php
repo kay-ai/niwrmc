@@ -45,7 +45,7 @@
         console.log("tx_id: ",tx_id);
 
         var paymentEngine = RmPaymentEngine.init({
-        key:"QzAwMDAyNzEyNTl8MTEwNjE4NjF8OWZjOWYwNmMyZDk3MDRhYWM3YThiOThlNTNjZTE3ZjYxOTY5NDdmZWE1YzU3NDc0ZjE2ZDZjNTg1YWYxNWY3NWM4ZjMzNzZhNjNhZWZlOWQwNmJhNTFkMjIxYTRiMjYzZDkzNGQ3NTUxNDIxYWNlOGY4ZWEyODY3ZjlhNGUwYTY=",
+        key:"{{env('REMITA_PUBLIC_KEY')}}",
         processRrr: true,
         transactionId: tx_id,
         extendedData: {
