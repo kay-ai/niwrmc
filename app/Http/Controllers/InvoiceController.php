@@ -43,39 +43,43 @@ class InvoiceController extends Controller
             "payerName" => $customer->first_name.' '.$customer->last_name,
             "payerEmail" => $customer->email,
             "payerPhone" => $customer->phone,
-            "description" => "Payment for ".$request->input('application_name') . "License"
+            "description" => "Payment for ".$request->input('application_name') . " License"
         ];
 
         if($application){
             $remitaRepo = new RemitaRepository();
-            $generateRRR = $remitaRepo->generateRRR($payload);
+            $generateRRR = $remitaRepo->generateRRR($payload, $category);
 
             $generateRRR = json_decode($generateRRR->getContent(), true);
-            $RRR = $generateRRR['data']['RRR'];
-            // dd($RRR);
+            if($generateRRR['status'] == 'success'){
+                $RRR = $generateRRR['data']['RRR'];
+                // dd($RRR);
 
-            $invoice = new Invoice();
-            $invoice->remita_rrr = $RRR;
-            $invoice->order_id = $randomNumber;
-            $invoice->customer_id = $customer->id;
-            $invoice->application_id = $request->input('application_id');
-            $invoice->application_name = $application->application_slug;
-            $invoice->item = $request->input('application_name');
-            $invoice->category = $request->input('price_category');
-            $invoice->amount = $price;
-            $invoice->currency = 'NGN';
-            $invoice->status = 'unpaid';
-            $invoice->save();
+                $invoice = new Invoice();
+                $invoice->remita_rrr = $RRR;
+                $invoice->order_id = $randomNumber;
+                $invoice->customer_id = $customer->id;
+                $invoice->application_id = $request->input('application_id');
+                $invoice->application_name = $application->application_slug;
+                $invoice->item = $request->input('application_name');
+                $invoice->category = $request->input('price_category');
+                $invoice->amount = $price;
+                $invoice->currency = 'NGN';
+                $invoice->status = 'unpaid';
+                $invoice->save();
 
-            if($application->stage == 'step2'){
-                $application->stage = 'step3';
-                $application->save();
+                if($application->stage == 'step2'){
+                    $application->stage = 'step3';
+                    $application->save();
+                }
+
+                // Send email to customer
+                Mail::to($customer->email)->send(new InvoiceGenerated($invoice, $customer, $invoice->item, $invoice->category));
+
+                return redirect()->back()->with('success', 'Invoice generated Successfully');
             }
 
-            // Send email to customer
-            Mail::to($customer->email)->send(new InvoiceGenerated($invoice, $customer, $invoice->item, $invoice->category));
-
-            return redirect()->back()->with('success', 'Invoice generated Successfully');
+            return redirect()->back()->with('error', 'Unable to generate invoice. RRR error!');
         }else{
             return redirect()->back()->with('error', 'Invalid Application');
         }

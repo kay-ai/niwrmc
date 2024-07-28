@@ -10,17 +10,22 @@ class RemitaRepository implements RemitaRepositoryInterface
     private $baseUrl = 'https://demo.remita.net/remita/exapp/api/v1/send/api/echannelsvc/';
     private $merchantId;
     private $apiKey;
-    private $serviceType;
+    private $serviceTypeProcessing;
+    private $serviceTypeLicensing;
 
     public function __construct(){
         $this->merchantId = env('REMITA_MERCHANT_ID');
         $this->apiKey = env('REMITA_API_KEY');
-        $this->serviceType = env('REMITA_SERVICE_TYPE');
+        $this->serviceTypeProcessing = env('REMITA_SERVICE_TYPE_PROCESSING');
+        $this->serviceTypeLicensing = env('REMITA_SERVICE_TYPE_LICENSING');
     }
 
-    public function generateRRR($data){
+    public function generateRRR($data, $licenseType){
+        $serviceType = $licenseType == "processing_fee" ? $this->serviceTypeProcessing : $this->serviceTypeLicensing;
+        // dd($this->apiKey, $serviceType);
+
         $payload = [
-            "serviceTypeId" => $this->serviceType,
+            "serviceTypeId" => $serviceType,
             "amount" => $data['amount'],
             "orderId" => $data['orderId'],
             "payerName" => $data['payerName'],
@@ -30,7 +35,7 @@ class RemitaRepository implements RemitaRepositoryInterface
         ];
 
         // Calculate apiHash
-        $apiHash = hash('sha512', $this->merchantId . $this->serviceType . $data['orderId'] . $data['amount'] . $this->apiKey);
+        $apiHash = hash('sha512', $this->merchantId . $serviceType . $data['orderId'] . $data['amount'] . $this->apiKey);
 
         // Log the payload and apiHash
         log::info('Payload:', $payload);
@@ -41,6 +46,7 @@ class RemitaRepository implements RemitaRepositoryInterface
         ])->post($this->baseUrl.'merchant/api/paymentinit', $payload);
 
         $rawResponse = $response->getBody()->getContents();
+        // dd(json_decode($rawResponse, true));
 
         // Remove the JSONP wrapper
         $startPos = strpos($rawResponse, '(') + 1;
@@ -49,7 +55,8 @@ class RemitaRepository implements RemitaRepositoryInterface
 
         $RRR = json_decode($jsonStr, true);
 
-        Log::info('Decoded Response RRR:', $RRR);
+        // dd($RRR);
+        // Log::info('Decoded Response RRR:', $RRR);
 
         if ($RRR === null || !isset($RRR['statuscode'])) {
             return response()->json(["status" => "failure", "msg" => "Null response from Remita"], 400);

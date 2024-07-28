@@ -67,7 +67,7 @@
                 });
 
                 const xhr = new XMLHttpRequest();
-                xhr.open("GET", "/verify-remita-payment/"+response.paymentReference+"/"+tx_id);
+                xhr.open("GET", "/verify-remita-payment/"+response.paymentReference);
                 xhr.onload = function() {
                     const verifyResponse = JSON.parse(xhr.responseText)
                     if (xhr.status === 200) {
