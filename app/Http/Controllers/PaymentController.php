@@ -118,11 +118,15 @@ class PaymentController extends Controller
         return redirect()->back()->with('success', 'Payment Verified Successfully');
     }
 
-    public function verifyRemitaPayment($rrr, $tx_id){
+    public function verifyRemitaPayment(Request $request){
+        $rrr = $request->rrr;
         $invoice = Invoice::where('remita_rrr', $rrr)->first();
         if(!$invoice){
             return response()->json(['status'=>'error', 'error'=>'Invalid RRR'], 404);
         }
+
+        $rand = rand(1000, 9999);
+        $randomNumber = "RRR$rand$invoice->id";
 
         $orderId = $invoice->order_id;
         $amount = $invoice->amount;
@@ -138,7 +142,7 @@ class PaymentController extends Controller
         if($status == 'Successful'){
             $payment = new Payment();
             $payment->invoice_id = $invoice->id;
-            $payment->transaction_id = $tx_id;
+            $payment->transaction_id = $randomNumber;
             $payment->amount_paid = $invoice->amount;
             $payment->purpose = $invoice->category;
             $payment->application_id = $invoice->application_id;
@@ -165,9 +169,17 @@ class PaymentController extends Controller
                 Mail::to($user->email)->send(new PaymentNotification($invoice, $customer));
             }
 
-            return response()->json(['status'=>'success', 'message'=>'Payment Verified Successfully'], 200);
+            if(url()->previous() == route('customer.invoices')){
+                return redirect()->back()->with('success', 'Payment Verified Successfully');
+            }else{
+                return response()->json(['status'=>'success', 'message'=>'Payment Verified Successfully'], 200);
+            }
         }else{
-            return response()->json(['status'=>'error', 'message'=>$verifyRRRStatus['data']['message']], 400);
+            if(url()->previous() == route('customer.invoices')){
+                return redirect()->back()->with('error', $verifyRRRStatus['data']['message']);
+            }else{
+                return response()->json(['status'=>'error', 'message'=>$verifyRRRStatus['data']['message']], 400);
+            }
         }
     }
 }

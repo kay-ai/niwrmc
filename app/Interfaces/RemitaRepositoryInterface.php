@@ -3,6 +3,6 @@ namespace App\Interfaces;
 
 interface RemitaRepositoryInterface
 {
-    public function generateRRR($data);
+    public function generateRRR($data, $licenseType);
     public function verifyTransactionStatus($orderId, $amount, $rrr);
 }

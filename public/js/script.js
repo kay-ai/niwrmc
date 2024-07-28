@@ -118,6 +118,10 @@ function verifyPay(id){
     $('#verify_payment_form').attr('action', "/payments/verify/"+id);
 }
 
+function verifyRRRStatus(rrr){
+    window.location.assign('/verify-remita-payment/'+rrr)
+}
+
 function approveLicense(id, slug){
     $('#approve-license').modal('show');
     $('#approve_license_form').attr('action', "/license-approve/"+id+"/"+slug);

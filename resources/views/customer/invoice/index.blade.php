@@ -38,6 +38,11 @@
                                             <i class="ti-eye"></i>
                                         </button>
                                         @if ($invoice->status == 'unpaid')
+                                            <button type="button" title="Verify Payment Status" onclick="verifyRRRStatus({{$invoice->remita_rrr}})" class="btn btn-success">
+                                                <i class="ti-check"></i>
+                                            </button>
+                                        @endif
+                                        @if ($invoice->status == 'unpaid')
                                             <button type="button" title="Upload Payment Receipt" onclick="uploadReceipt({{$invoice->id}})" class="btn btn-secondary">
                                                 <i class="ti-export"></i>
                                             </button>

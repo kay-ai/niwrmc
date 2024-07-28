@@ -41,7 +41,7 @@ Route::controller(PagesController::class)->group(function () {
 });
 
 Route::controller(PaymentController::class)->group(function(){
-    Route::get('/verify-remita-payment/{rrr}/{tx_id}', 'verifyRemitaPayment')->name('verify.payment');
+    Route::get('/verify-remita-payment/{rrr}', 'verifyRemitaPayment')->name('verify.payment');
 });
 
 Route::middleware('auth:customer')->group(function () {
