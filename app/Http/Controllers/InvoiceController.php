@@ -53,7 +53,6 @@ class InvoiceController extends Controller
             $generateRRR = json_decode($generateRRR->getContent(), true);
             if($generateRRR['status'] == 'success'){
                 $RRR = $generateRRR['data']['RRR'];
-                // dd($RRR);
 
                 $invoice = new Invoice();
                 $invoice->remita_rrr = $RRR;
