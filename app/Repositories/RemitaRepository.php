@@ -48,6 +48,8 @@ class RemitaRepository implements RemitaRepositoryInterface
 
             $rawResponse = $response->getBody()->getContents();
 
+            Log::info('Raw response from Remita:', $rawResponse);
+
             // Remove the JSONP wrapper
             $startPos = strpos($rawResponse, '(') + 1;
             $endPos = strrpos($rawResponse, ')');
@@ -55,7 +57,7 @@ class RemitaRepository implements RemitaRepositoryInterface
 
             $RRR = json_decode($jsonStr, true);
 
-            // Log::info('Decoded Response RRR:', $RRR);
+            Log::info('Decoded Response RRR:', $RRR);
 
             if ($RRR === null || !isset($RRR['statuscode'])) {
                 return response()->json(["status" => "failure", "msg" => "Null response from Remita"], 400);
