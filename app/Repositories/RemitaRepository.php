@@ -22,9 +22,8 @@ class RemitaRepository implements RemitaRepositoryInterface
     }
 
     public function generateRRR($data, $licenseType){
-        try{
+        try {
             $serviceType = $licenseType == "processing_fee" ? $this->serviceTypeProcessing : $this->serviceTypeLicensing;
-
             $payload = [
                 "serviceTypeId" => $serviceType,
                 "amount" => $data['amount'],
@@ -35,44 +34,43 @@ class RemitaRepository implements RemitaRepositoryInterface
                 "description" => $data['description']
             ];
 
-            // Calculate apiHash
             $apiHash = hash('sha512', $this->merchantId . $serviceType . $data['orderId'] . $data['amount'] . $this->apiKey);
-
-            // Log the payload and apiHash
-            log::info('Payload:', $payload);
+            Log::info('Payload:', ['payload' => $payload]);
             Log::info('apiHash:', ['apiHash' => $apiHash]);
-            Log::info('Post URL:', $this->baseUrl.'merchant/api/paymentinit', $payload);
 
             $response = Http::withHeaders([
                 'Authorization' => 'remitaConsumerKey='. $this->merchantId.',remitaConsumerToken='. $apiHash
-            ])->post($this->baseUrl.'merchant/api/paymentinit', $payload);
+            ])->post($this->baseUrl . 'merchant/api/paymentinit', $payload);
 
             $rawResponse = $response->getBody()->getContents();
+            Log::info('Raw response from Remita:', ['response' => $rawResponse]);
 
-            Log::info('Raw response from Remita:', $rawResponse);
+            // Attempt to handle as standard JSON first
+            $RRR = json_decode($rawResponse, true);
 
-            // Remove the JSONP wrapper
-            $startPos = strpos($rawResponse, '(') + 1;
-            $endPos = strrpos($rawResponse, ')');
-            $jsonStr = substr($rawResponse, $startPos, $endPos - $startPos);
-
-            $RRR = json_decode($jsonStr, true);
-
-            Log::info('Decoded Response RRR:', $RRR);
+            if ($RRR === null && strpos($rawResponse, '(') !== false) {
+                // Fallback to JSONP parsing
+                $startPos = strpos($rawResponse, '(') + 1;
+                $endPos = strrpos($rawResponse, ')');
+                $jsonStr = substr($rawResponse, $startPos, $endPos - $startPos);
+                $RRR = json_decode($jsonStr, true);
+            }
 
             if ($RRR === null || !isset($RRR['statuscode'])) {
-                return response()->json(["status" => "failure", "msg" => "Null response from Remita"], 400);
-            } else {
-                if($RRR['statuscode'] == '025'){
-                    return response()->json(["status" => "success", "data" => $RRR], 200);
-                }else{
-                    return response()->json(["status" => "failure", "msg" => $RRR], 400);
-                }
+                return ["status" => "failure", "msg" => "Null response from Remita"];
             }
-        }catch(\Throwable $th){
-            return response()->json(["status" => "failure", "msg" => $th->getMessage()], 400);
+
+            if($RRR['statuscode'] == '025'){
+                return response()->json(["status" => "success", "data" => $RRR], 200);
+            }else{
+                return response()->json(["status" => "failure", "msg" => $RRR], 400);
+            }
+        } catch (\Exception $e) {
+            Log::error('Error in generating RRR: ', ['error' => $e->getMessage()]);
+            return ["status" => "failure", "msg" => $e->getMessage()];
         }
     }
+
 
 
     public function verifyTransactionStatus($orderId, $amount, $rrr){
