@@ -41,6 +41,7 @@ class RemitaRepository implements RemitaRepositoryInterface
             // Log the payload and apiHash
             log::info('Payload:', $payload);
             Log::info('apiHash:', ['apiHash' => $apiHash]);
+            Log::info('Post URL:', $this->baseUrl.'merchant/api/paymentinit', $payload);
 
             $response = Http::withHeaders([
                 'Authorization' => 'remitaConsumerKey='. $this->merchantId.',remitaConsumerToken='. $apiHash
